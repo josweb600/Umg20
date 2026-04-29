@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="theme-color" content="#0d0d0d"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="UMG"/>
+  <meta name="description" content="UMG - Start your work journey"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="icons/icon-192.png"/>
+  <title>UMG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    :root {
+      --bg-dark:#0d0d0d; --bg-card:#1a1a2e; --bg-card2:#16213e;
+      --accent-blue:#4da6ff; --accent-gold:#f0c040; --accent-teal:#00b4d8;
+      --text-primary:#ffffff; --text-muted:#a0aec0; --nav-bg:#111111;
+      --green:#48bb78;
+    }
+    html, body { height:100%; background:var(--bg-dark); color:var(--text-primary); font-family:'Nunito',sans-serif; overflow:hidden; }
+    #app { max-width:480px; margin:0 auto; height:100vh; display:flex; flex-direction:column; position:relative; background:var(--bg-dark); }
+
+    /* ── PAGES ── */
+    .page { flex:1; overflow-y:auto; padding-bottom:72px; display:none; }
+    .page.active { display:block; }
+    ::-webkit-scrollbar { display:none; }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+      width:100%; max-width:480px;
+      background:var(--nav-bg); display:flex; justify-content:space-around;
+      padding:10px 0 env(safe-area-inset-bottom,12px);
+      border-top:1px solid #222; z-index:100;
+    }
+    .nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; font-size:11px; color:var(--text-muted); background:none; border:none; padding:4px 10px; font-family:'Nunito',sans-serif; transition:color .2s; }
+    .nav-item.active { color:var(--accent-blue); }
+    .nav-item svg { width:22px; height:22px; }
+
+    /* ── HOME ── */
+    .home-header { display:flex; justify-content:space-between; align-items:center; padding:16px 18px 10px; background:#111; }
+    .lang-btn { color:var(--accent-blue); font-size:13px; font-weight:700; cursor:pointer; background:none; border:none; font-family:'Nunito',sans-serif; }
+    .logo-text { font-family:'Orbitron',sans-serif; font-size:18px; font-weight:900; letter-spacing:2px; }
+    .chat-btn { width:32px; height:32px; border-radius:50%; background:#222; display:flex; align-items:center; justify-content:center; cursor:pointer; border:none; position:relative; }
+    .chat-dot { position:absolute; top:2px; right:2px; width:8px; height:8px; background:red; border-radius:50%; }
+
+    .hero-banner {
+      background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+      padding:24px 20px 20px; position:relative; overflow:hidden; min-height:200px;
+    }
+    .hero-banner::before { content:''; position:absolute; top:-40px; right:-40px; width:200px; height:200px; background:radial-gradient(circle,rgba(77,166,255,.15) 0%,transparent 70%); border-radius:50%; }
+    .hero-title { font-size:22px; font-weight:800; line-height:1.35; margin-bottom:16px; }
+    .vip-badge { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(90deg,#b8860b,#f0c040,#b8860b); padding:6px 16px; border-radius:20px; font-weight:800; font-size:14px; color:#1a1a00; box-shadow:0 2px 12px rgba(240,192,64,.4); }
+    .umg-logo-hero { position:absolute; right:20px; top:20px; width:80px; height:80px; border:2px solid rgba(255,255,255,.3); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Orbitron',sans-serif; font-weight:900; font-size:14px; background:rgba(255,255,255,.05); backdrop-filter:blur(4px); }
+
+    .carousel-dots { display:flex; justify-content:center; gap:5px; padding:10px 0; background:#0d0d0d; }
+    .dot { width:6px; height:6px; border-radius:50%; background:#444; cursor:pointer; }
+    .dot.active { background:var(--accent-blue); }
+
+    .marquee-bar { background:#111; padding:10px 16px; display:flex; align-items:flex-start; gap:8px; font-size:13px; color:#ddd; overflow:hidden; }
+    .marquee-text { white-space:nowrap; animation:marquee 15s linear infinite; }
+    @keyframes marquee { 0%{transform:translateX(100%)} 100%{transform:translateX(-100%)} }
+
+    .exchange-rate { padding:8px 16px 12px; background:#0d0d0d; font-size:13px; font-weight:800; }
+
+    .quick-actions { display:grid; grid-template-columns:repeat(3,1fr); background:#161616; padding:16px 12px 8px; }
+    .action-item { display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; padding:8px 4px; }
+    .action-icon { width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#1e2a45,#243b6a); display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(0,0,0,.3); }
+    .action-label { font-size:12px; font-weight:700; color:#ccc; text-align:center; }
+
+    /* ── TASK ── */
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 18px; background:#0d0d0d; border-bottom:1px solid #222; }
+    .back-btn { background:none; border:none; color:white; cursor:pointer; font-size:22px; line-height:1; }
+    .page-title { font-size:18px; font-weight:800; }
+
+    .tab-bar { display:flex; background:#161b2e; border-radius:10px; margin:14px 16px; padding:4px; gap:2px; }
+    .tab-btn { flex:1; padding:9px 4px; border:none; border-radius:8px; background:transparent; color:var(--accent-blue); font-size:13px; font-weight:700; cursor:pointer; transition:background .2s,color .2s; font-family:'Nunito',sans-serif; }
+    .tab-btn.active { background:var(--accent-blue); color:white; }
+
+    .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px 20px; gap:12px; color:var(--text-muted); font-size:15px; }
+    .empty-emoji { font-size:64px; animation:float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+    /* ── PROFIT ── */
+    .vip-hero { height:180px; background:linear-gradient(180deg,#0a2a5e 0%,#1a4a8e 50%,#0d1a3a 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; position:relative; overflow:hidden; }
+    .vip-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%,rgba(100,180,255,.25) 0%,transparent 70%); }
+    .vip-hero-logo { font-family:'Orbitron',sans-serif; font-size:28px; font-weight:900; letter-spacing:4px; position:relative; }
+
+    .section-box { background:linear-gradient(90deg,#1a3a6e,#243b6a); margin:12px 16px 0; border-radius:8px; padding:10px 16px; font-size:14px; font-weight:700; }
+
+    .vip-table { margin:10px 16px; border-radius:10px; overflow:hidden; border:1px solid #2a3a5a; }
+    .vip-table-header { display:grid; grid-template-columns:.7fr 1fr .6fr .6fr .7fr 1fr 1fr; background:#1e2d50; padding:8px 4px; font-weight:700; color:#a0c4ff; font-size:10px; }
+    .vip-table-row { display:grid; grid-template-columns:.7fr 1fr .6fr .6fr .7fr 1fr 1fr; padding:7px 4px; border-top:1px solid #1e2a40; background:#0f1829; font-size:10px; color:#ccc; }
+    .vip-table-row:nth-child(even) { background:#111e35; }
+    .th,.td { text-align:center; word-break:break-all; padding:1px; }
+
+    /* ── VIP ── */
+    .vip-card { margin:10px 16px; border-radius:14px; padding:18px; position:relative; overflow:hidden; }
+    .vip-card.identity { background:linear-gradient(135deg,#1e2a4a,#2a3a6a); }
+    .vip-card.trainee { background:linear-gradient(135deg,#2a3560,#3a4a80); }
+    .vip-card.u1 { background:linear-gradient(135deg,#0a4a5e,#0d6a8a); }
+    .vip-card.u2 { background:linear-gradient(135deg,#1a3a2a,#2a5a3a); }
+    .vip-card-title { font-size:22px; font-weight:800; margin-bottom:4px; }
+    .vip-card-price { color:var(--accent-gold); font-size:18px; font-weight:800; margin-bottom:8px; }
+    .vip-card-detail { font-size:13px; color:#ccc; line-height:1.8; }
+    .badge-tr { position:absolute; top:14px; right:14px; font-size:12px; color:#a0c4ff; font-weight:700; }
+    .badge-icon { position:absolute; bottom:14px; right:14px; font-size:40px; }
+    .join-btn { margin-top:12px; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:white; padding:8px 20px; border-radius:20px; font-size:13px; font-weight:700; cursor:pointer; font-family:'Nunito',sans-serif; }
+
+    /* ── ACCOUNT ── */
+    .account-header-bar { display:flex; justify-content:space-between; align-items:center; padding:16px 18px; background:#0d0d0d; border-bottom:1px solid #1a1a2e; }
+    .wallet-btn { display:flex; align-items:center; gap:6px; background:var(--accent-gold); color:#1a1a00; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:800; border:none; cursor:pointer; font-family:'Nunito',sans-serif; }
+    .account-user-row { display:flex; justify-content:space-between; align-items:center; padding:14px 18px; background:#0d0d0d; }
+    .login-account { font-size:16px; font-weight:700; }
+    .daily-signin-btn { display:flex; flex-direction:column; align-items:center; gap:2px; background:none; border:1px solid #2a3a5a; border-radius:8px; padding:6px 10px; color:var(--text-muted); font-size:11px; cursor:pointer; font-family:'Nunito',sans-serif; }
+
+    .balance-strip { display:grid; grid-template-columns:1fr 1fr 1fr; background:#111; border-top:1px solid #1e2a3a; border-bottom:1px solid #1e2a3a; }
+    .balance-cell { padding:16px 10px; text-align:center; border-right:1px solid #1e2a3a; }
+    .balance-cell:last-child { border-right:none; }
+    .balance-label { font-size:11px; color:var(--text-muted); line-height:1.3; margin-bottom:4px; }
+    .balance-value { font-size:18px; font-weight:800; color:var(--accent-blue); }
+    .identity-value { font-size:13px; font-weight:800; color:var(--accent-blue); }
+
+    .stats-grid { display:grid; grid-template-columns:1fr 1fr 1fr; margin:12px 0; gap:1px; background:#1e2a3a; }
+    .stat-cell { background:#0d0d0d; padding:14px 8px; text-align:center; }
+    .stat-label { font-size:11px; color:var(--text-muted); line-height:1.3; margin-bottom:4px; }
+    .stat-value { font-size:16px; font-weight:800; color:var(--accent-blue); }
+
+    .menu-btn { display:flex; justify-content:space-between; align-items:center; padding:16px 18px; margin:6px 16px; background:#111; border:1px solid #1e2a3a; border-radius:12px; font-size:15px; font-weight:700; color:white; cursor:pointer; width:calc(100% - 32px); font-family:'Nunito',sans-serif; }
+
+    /* ── INSTALL BANNER ── */
+    #install-banner { display:none; position:fixed; top:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:linear-gradient(90deg,#1a3a6e,#0d6a8a); padding:12px 18px; z-index:200; align-items:center; justify-content:space-between; gap:8px; box-shadow:0 2px 16px rgba(0,0,0,.5); }
+    #install-banner span { font-size:13px; font-weight:700; flex:1; }
+    #install-btn { background:var(--accent-gold); color:#1a1a00; border:none; padding:7px 14px; border-radius:20px; font-weight:800; font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; white-space:nowrap; }
+    #dismiss-btn { background:none; border:none; color:rgba(255,255,255,.6); cursor:pointer; font-size:20px; line-height:1; }
+  </style>
+</head>
+<body>
+<div id="install-banner">
+  <span>📲 Install UMG App on your device!</span>
+  <button id="install-btn">Install</button>
+  <button id="dismiss-btn">✕</button>
+</div>
+
+<div id="app">
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="home-header">
+      <button class="lang-btn">🌐 Select Language</button>
+      <span class="logo-text">UMG</span>
+      <button class="chat-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+          <circle cx="5" cy="12" r="1.5" fill="white"/><circle cx="12" cy="12" r="1.5" fill="white"/><circle cx="19" cy="12" r="1.5" fill="white"/>
+        </svg>
+        <span class="chat-dot"></span>
+      </button>
+    </div>
+
+    <div class="hero-banner">
+      <div class="hero-title">Welcome to UMG<br/>Start your work journey</div>
+      <div class="vip-badge">🏆 VIP0</div>
+      <div class="umg-logo-hero">UMG</div>
+    </div>
+
+    <div class="carousel-dots" id="carousel-dots"></div>
+
+    <div class="marquee-bar">
+      <span>🔊</span>
+      <span class="marquee-text">Congratulations member 91****40 for receiving a reward of 70.00ETB! &nbsp;&nbsp;&nbsp; Congratulations member 87****12 for receiving a reward of 54.00ETB!</span>
+    </div>
+
+    <div class="exchange-rate">💱 Current USDT exchange rate: <strong>169.5</strong></div>
+
+    <div class="quick-actions">
+      <div class="action-item"><div class="action-icon">💰</div><div class="action-label">Recharge</div></div>
+      <div class="action-item"><div class="action-icon">🤲</div><div class="action-label">Withdraw</div></div>
+      <div class="action-item"><div class="action-icon">🎁</div><div class="action-label">Invitation<br/>Rewards</div></div>
+    </div>
+    <div class="quick-actions" style="padding-top:0">
+      <div class="action-item"><div class="action-icon">🏢</div><div class="action-label">Company<br/>Profile</div></div>
+      <div class="action-item" style="justify-content:flex-end;padding-bottom:16px"><div class="action-label" style="color:#aaa;font-size:13px">Login Reward</div></div>
+      <div class="action-item" style="justify-content:flex-end;padding-bottom:16px"><div class="action-label" style="color:#aaa;font-size:13px">Schedule</div></div>
+    </div>
+  </div>
+
+  <!-- TASK -->
+  <div class="page" id="page-task">
+    <div class="page-header">
+      <button class="back-btn" onclick="setTab('home')">‹</button>
+      <span class="page-title">Task List</span>
+    </div>
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="setTaskTab(this,0)">In Progress</button>
+      <button class="tab-btn" onclick="setTaskTab(this,1)">Under Review</button>
+      <button class="tab-btn" onclick="setTaskTab(this,2)">Completed</button>
+    </div>
+    <div class="empty-state">
+      <div class="empty-emoji">😢</div>
+      <span>No Data</span>
+    </div>
+  </div>
+
+  <!-- PROFIT -->
+  <div class="page" id="page-profit">
+    <div class="vip-hero">
+      <div class="vip-hero-logo">UMG</div>
+      <div style="font-size:13px;color:#a0c4ff;margin-top:4px;position:relative">Work Levels & Income Schedule</div>
+    </div>
+    <div class="section-box">💰 Payment Unit: Ethiopian Birr (ETB)</div>
+    <div class="vip-table">
+      <div class="vip-table-header">
+        <div class="th">Level</div><div class="th">Deposit</div><div class="th">Tasks</div>
+        <div class="th">Per Order</div><div class="th">Daily</div><div class="th">Monthly</div><div class="th">Annual</div>
+      </div>
+      <div style="background:#0a1220;padding:6px;border-top:1px solid #1e2a40;font-size:10px;color:#6a8aaa;text-align:center">
+        Trainee — 3 tasks / 18 ETB per order / 54 ETB daily earnings
+      </div>
+      <div class="vip-table-row"><div class="td">U1</div><div class="td">1,600</div><div class="td">3</div><div class="td">18</div><div class="td">54</div><div class="td">1,620</div><div class="td">19,710</div></div>
+      <div class="vip-table-row"><div class="td">U2</div><div class="td">6,500</div><div class="td">8</div><div class="td">28</div><div class="td">224</div><div class="td">6,720</div><div class="td">80,640</div></div>
+      <div class="vip-table-row"><div class="td">U3</div><div class="td">20,700</div><div class="td">12</div><div class="td">54</div><div class="td">648</div><div class="td">19,440</div><div class="td">236,520</div></div>
+      <div class="vip-table-row"><div class="td">U4</div><div class="td">73,700</div><div class="td">24</div><div class="td">100</div><div class="td">2,400</div><div class="td">72,000</div><div class="td">876,000</div></div>
+      <div class="vip-table-row"><div class="td">U5</div><div class="td">160,700</div><div class="td">36</div><div class="td">150</div><div class="td">5,400</div><div class="td">162,000</div><div class="td">1,971,000</div></div>
+      <div class="vip-table-row"><div class="td">U6</div><div class="td">333,700</div><div class="td">50</div><div class="td">240</div><div class="td">12,000</div><div class="td">360,000</div><div class="td">4,380,000</div></div>
+      <div class="vip-table-row"><div class="td">U7</div><div class="td">937,700</div><div class="td">60</div><div class="td">600</div><div class="td">36,000</div><div class="td">1,080,000</div><div class="td">13,140,000</div></div>
+      <div class="vip-table-row"><div class="td">U8</div><div class="td">2,273,000</div><div class="td">80</div><div class="td">1,120</div><div class="td">89,600</div><div class="td">2,688,000</div><div class="td">32,704,000</div></div>
+      <div class="vip-table-row"><div class="td">U9</div><div class="td">4,937,000</div><div class="td">100</div><div class="td">1,977</div><div class="td">197,700</div><div class="td">5,931,000</div><div class="td">72,160,500</div></div>
+    </div>
+    <div class="section-box" style="margin-top:12px">📋 Trainee Level Rules</div>
+    <div style="margin:8px 16px 24px;background:#0f1829;border-radius:10px;padding:14px 16px;font-size:13px;color:#ccc;line-height:1.8;border:1px solid #1e2a3a">
+      Trainee level: No minimum deposit required. Complete 3 tasks daily. Each task earns 18 ETB commission. Daily maximum earnings: 54 ETB.
+    </div>
+  </div>
+
+  <!-- VIP -->
+  <div class="page" id="page-vip">
+    <div style="padding:14px 18px 8px;background:#0d0d0d;border-bottom:1px solid #1e2a3a">
+      <div style="font-size:18px;font-weight:800">💎 VIP Membership</div>
+    </div>
+
+    <div class="vip-card identity">
+      <div style="font-size:13px;color:#a0c4ff;margin-bottom:4px">Your Identity</div>
+      <div style="font-size:20px;font-weight:800">Trainee Member</div>
+      <div style="margin-top:12px;display:flex;justify-content:space-between;font-size:13px;color:#ccc">
+        <span>Daily Tasks: 0 times</span>
+        <div style="text-align:right"><div style="color:#a0c4ff;font-size:11px">Effective Date</div><div>Permanent Validity</div></div>
+      </div>
+    </div>
+
+    <div class="vip-card trainee">
+      <div class="badge-tr">Current Level</div>
+      <div class="vip-card-title">Trainee Member</div>
+      <div class="vip-card-price">ETB 0.00</div>
+      <div class="vip-card-detail">Daily Tasks: 3 times<br/>Per Order: 18.00 ETB<br/>Daily Earnings: 54.00 ETB</div>
+      <div class="badge-icon">💎</div>
+    </div>
+
+    <div class="vip-card u1">
+      <div class="badge-tr" style="color:#fff">Join Now</div>
+      <div class="vip-card-title">U1</div>
+      <div class="vip-card-price">ETB 2,000.00</div>
+      <div class="vip-card-detail">Daily Tasks: 3 times<br/>Per Order: 18.00 ETB<br/>Daily Earnings: 54.00 ETB</div>
+      <button class="join-btn">Join Now</button>
+      <div class="badge-icon">🥇</div>
+    </div>
+
+    <div class="vip-card u2" style="margin-bottom:8px">
+      <div class="badge-tr" style="color:#fff">Join Now</div>
+      <div class="vip-card-title">U2</div>
+      <div class="vip-card-price">ETB 6,500.00</div>
+      <div class="vip-card-detail">Daily Tasks: 8 times<br/>Per Order: 28.00 ETB<br/>Daily Earnings: 224.00 ETB</div>
+      <button class="join-btn">Join Now</button>
+      <div class="badge-icon">🥈</div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div class="page" id="page-account">
+    <div class="account-header-bar">
+      <button class="back-btn" onclick="setTab('home')">‹</button>
+      <span style="font-weight:800;font-size:17px">Personal Center</span>
+      <button class="wallet-btn">💳 My Wallet</button>
+    </div>
+    <div class="account-user-row">
+      <div class="login-account">Login Account: ***979047</div>
+      <button class="daily-signin-btn"><span>📅</span><span>Daily Sign-in</span></button>
+    </div>
+    <div class="balance-strip">
+      <div class="balance-cell"><div class="balance-label">Personal Balance(ETB)</div><div class="balance-value">108.00</div></div>
+      <div class="balance-cell"><div class="balance-label">Security Deposit(ETB)</div><div class="balance-value">0</div></div>
+      <div class="balance-cell"><div class="balance-label">Your Identity</div><div class="identity-value">💎 Trainee Member</div></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-cell"><div class="stat-label">Yesterday's Earnings(ETB)</div><div class="stat-value">0.00</div></div>
+      <div class="stat-cell"><div class="stat-label">Today's Earnings(ETB)</div><div class="stat-value">0.00</div></div>
+      <div class="stat-cell"><div class="stat-label">This Week's Earnings(ETB)</div><div class="stat-value">0.00</div></div>
+      <div class="stat-cell"><div class="stat-label">This Month's Earnings(ETB)</div><div class="stat-value">0.00</div></div>
+      <div class="stat-cell"><div class="stat-label">Total Earnings(ETB)</div><div class="stat-value" style="color:var(--green)">118.99</div></div>
+      <div class="stat-cell"><div class="stat-label">Tasks Completed Today (Units)</div><div class="stat-value">0</div></div>
+      <div class="stat-cell"><div class="stat-label">Remaining Tasks Today (Units)</div><div class="stat-value">0</div></div>
+      <div class="stat-cell"><div class="stat-label">Task Rewards(ETB)</div><div class="stat-value">0.00</div></div>
+      <div class="stat-cell"><div class="stat-label">Referral Rewards(ETB)</div><div class="stat-value">0.00</div></div>
+    </div>
+    <button class="menu-btn">Position <span style="color:var(--accent-blue)">›</span></button>
+    <button class="menu-btn">Personal Information <span style="color:var(--accent-blue)">›</span></button>
+    <button class="menu-btn" style="margin-bottom:24px">Settings <span style="color:var(--accent-blue)">›</span></button>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="setTab('home')">
+      <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="0"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9" fill="#0d0d0d"/></svg>
+      Home
+    </button>
+    <button class="nav-item" id="nav-task" onclick="setTab('task')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>
+      Task
+    </button>
+    <button class="nav-item" id="nav-profit" onclick="setTab('profit')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14H11v-2h2v2zm0-4H11V7h2v5z"/></svg>
+      Profit
+    </button>
+    <button class="nav-item" id="nav-vip" onclick="setTab('vip')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+      VIP
+    </button>
+    <button class="nav-item" id="nav-account" onclick="setTab('account')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
+      Account
+    </button>
+  </nav>
+</div>
+
+<script>
+  // ── Tab Navigation ──
+  const tabs = ['home','task','profit','vip','account'];
+  function setTab(id) {
+    tabs.forEach(t => {
+      document.getElementById('page-'+t).classList.toggle('active', t===id);
+      document.getElementById('nav-'+t).classList.toggle('active', t===id);
+    });
+  }
+
+  // ── Task Tabs ──
+  function setTaskTab(btn, idx) {
+    document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  }
+
+  // ── Carousel Dots ──
+  const dotsEl = document.getElementById('carousel-dots');
+  let activeDot = 2;
+  for (let i=0;i<13;i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===activeDot?' active':'');
+    d.onclick = () => { activeDot=i; document.querySelectorAll('.dot').forEach((el,j)=>el.classList.toggle('active',j===i)); };
+    dotsEl.appendChild(d);
+  }
+
+  // ── PWA Install ──
+  let deferredPrompt;
+  const banner = document.getElementById('install-banner');
+  const installBtn = document.getElementById('install-btn');
+  const dismissBtn = document.getElementById('dismiss-btn');
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    banner.style.display = 'flex';
+  });
+
+  installBtn.addEventListener('click', async () => {
+    banner.style.display = 'none';
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+    }
+  });
+
+  dismissBtn.addEventListener('click', () => { banner.style.display = 'none'; });
+
+  window.addEventListener('appinstalled', () => { banner.style.display = 'none'; });
+
+  // ── Service Worker ──
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  }
+</script>
+</body>
+</html>
