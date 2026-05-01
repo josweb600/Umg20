@@ -48,10 +48,7 @@
     .chat-btn { width:32px; height:32px; border-radius:50%; background:#222; display:flex; align-items:center; justify-content:center; cursor:pointer; border:none; position:relative; }
     .chat-dot { position:absolute; top:2px; right:2px; width:8px; height:8px; background:red; border-radius:50%; }
 
-    .hero-banner {
-      background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
-      padding:24px 20px 20px; position:relative; overflow:hidden; min-height:200px;
-    }
+    .hero-banner { background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); padding:24px 20px 20px; position:relative; overflow:hidden; min-height:200px; }
     .hero-banner::before { content:''; position:absolute; top:-40px; right:-40px; width:200px; height:200px; background:radial-gradient(circle,rgba(77,166,255,.15) 0%,transparent 70%); border-radius:50%; }
     .hero-title { font-size:22px; font-weight:800; line-height:1.35; margin-bottom:16px; }
     .vip-badge { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(90deg,#b8860b,#f0c040,#b8860b); padding:6px 16px; border-radius:20px; font-weight:800; font-size:14px; color:#1a1a00; box-shadow:0 2px 12px rgba(240,192,64,.4); }
@@ -81,7 +78,11 @@
     .tab-btn { flex:1; padding:9px 4px; border:none; border-radius:8px; background:transparent; color:var(--accent-blue); font-size:13px; font-weight:700; cursor:pointer; transition:background .2s,color .2s; font-family:'Nunito',sans-serif; }
     .tab-btn.active { background:var(--accent-blue); color:white; }
 
-    .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px 20px; gap:12px; color:var(--text-muted); font-size:15px; }
+    .task-container { padding: 20px 16px; display: flex; flex-direction: column; gap: 15px; }
+    .do-task-btn { background: var(--accent-blue); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; font-family: 'Nunito', sans-serif; box-shadow: 0 4px 12px rgba(77, 166, 255, 0.3); }
+    .do-task-btn:disabled { background: #333; color: #777; cursor: not-allowed; box-shadow: none; }
+
+    .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; gap:12px; color:var(--text-muted); font-size:15px; }
     .empty-emoji { font-size:64px; animation:float 3s ease-in-out infinite; }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
 
@@ -89,9 +90,7 @@
     .vip-hero { height:180px; background:linear-gradient(180deg,#0a2a5e 0%,#1a4a8e 50%,#0d1a3a 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; position:relative; overflow:hidden; }
     .vip-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%,rgba(100,180,255,.25) 0%,transparent 70%); }
     .vip-hero-logo { font-family:'Orbitron',sans-serif; font-size:28px; font-weight:900; letter-spacing:4px; position:relative; }
-
     .section-box { background:linear-gradient(90deg,#1a3a6e,#243b6a); margin:12px 16px 0; border-radius:8px; padding:10px 16px; font-size:14px; font-weight:700; }
-
     .vip-table { margin:10px 16px; border-radius:10px; overflow:hidden; border:1px solid #2a3a5a; }
     .vip-table-header { display:grid; grid-template-columns:.7fr 1fr .6fr .6fr .7fr 1fr 1fr; background:#1e2d50; padding:8px 4px; font-weight:700; color:#a0c4ff; font-size:10px; }
     .vip-table-row { display:grid; grid-template-columns:.7fr 1fr .6fr .6fr .7fr 1fr 1fr; padding:7px 4px; border-top:1px solid #1e2a40; background:#0f1829; font-size:10px; color:#ccc; }
@@ -131,23 +130,11 @@
     .stat-value { font-size:16px; font-weight:800; color:var(--accent-blue); }
 
     .menu-btn { display:flex; justify-content:space-between; align-items:center; padding:16px 18px; margin:6px 16px; background:#111; border:1px solid #1e2a3a; border-radius:12px; font-size:15px; font-weight:700; color:white; cursor:pointer; width:calc(100% - 32px); font-family:'Nunito',sans-serif; }
-
-    /* ── INSTALL BANNER ── */
-    #install-banner { display:none; position:fixed; top:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:linear-gradient(90deg,#1a3a6e,#0d6a8a); padding:12px 18px; z-index:200; align-items:center; justify-content:space-between; gap:8px; box-shadow:0 2px 16px rgba(0,0,0,.5); }
-    #install-banner span { font-size:13px; font-weight:700; flex:1; }
-    #install-btn { background:var(--accent-gold); color:#1a1a00; border:none; padding:7px 14px; border-radius:20px; font-weight:800; font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; white-space:nowrap; }
-    #dismiss-btn { background:none; border:none; color:rgba(255,255,255,.6); cursor:pointer; font-size:20px; line-height:1; }
   </style>
 </head>
 <body>
-<div id="install-banner">
-  <span>📲 Install UMG App on your device!</span>
-  <button id="install-btn">Install</button>
-  <button id="dismiss-btn">✕</button>
-</div>
 
 <div id="app">
-  <!-- HOME -->
   <div class="page active" id="page-home">
     <div class="home-header">
       <button class="lang-btn">🌐 Select Language</button>
@@ -162,7 +149,7 @@
 
     <div class="hero-banner">
       <div class="hero-title">Welcome to UMG<br/>Start your work journey</div>
-      <div class="vip-badge">🏆 VIP0</div>
+      <div class="vip-badge" id="hero-vip-badge">🏆 VIP0</div>
       <div class="umg-logo-hero">UMG</div>
     </div>
 
@@ -176,8 +163,8 @@
     <div class="exchange-rate">💱 Current USDT exchange rate: <strong>169.5</strong></div>
 
     <div class="quick-actions">
-      <div class="action-item"><div class="action-icon">💰</div><div class="action-label">Recharge</div></div>
-      <div class="action-item"><div class="action-icon">🤲</div><div class="action-label">Withdraw</div></div>
+      <div class="action-item" onclick="appDB.recharge(500)"><div class="action-icon">💰</div><div class="action-label">Recharge</div></div>
+      <div class="action-item" onclick="appDB.withdraw()"><div class="action-icon">🤲</div><div class="action-label">Withdraw</div></div>
       <div class="action-item"><div class="action-icon">🎁</div><div class="action-label">Invitation<br/>Rewards</div></div>
     </div>
     <div class="quick-actions" style="padding-top:0">
@@ -187,7 +174,6 @@
     </div>
   </div>
 
-  <!-- TASK -->
   <div class="page" id="page-task">
     <div class="page-header">
       <button class="back-btn" onclick="setTab('home')">‹</button>
@@ -198,13 +184,22 @@
       <button class="tab-btn" onclick="setTaskTab(this,1)">Under Review</button>
       <button class="tab-btn" onclick="setTaskTab(this,2)">Completed</button>
     </div>
-    <div class="empty-state">
-      <div class="empty-emoji">😢</div>
-      <span>No Data</span>
+    
+    <div id="task-view-0" class="task-container">
+        <div style="background: #161b2e; padding: 16px; border-radius: 12px; border: 1px solid #2a3a5a;">
+            <div style="font-size: 14px; margin-bottom: 8px; color: #a0c4ff;">Current Level: <strong id="task-level-name">Trainee</strong></div>
+            <div style="font-size: 14px; margin-bottom: 16px; color: #ccc;">Reward per task: <strong id="task-reward-amount" style="color: var(--accent-gold);">18.00 ETB</strong></div>
+            <button class="do-task-btn" id="btn-do-task" style="width: 100%;" onclick="appDB.completeTask()">Complete Next Task</button>
+            <div style="text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 10px;" id="task-limit-text">0 / 3 completed today</div>
+        </div>
+    </div>
+
+    <div id="task-view-empty" class="empty-state" style="display: none;">
+      <div class="empty-emoji">✅</div>
+      <span>All Caught Up!</span>
     </div>
   </div>
 
-  <!-- PROFIT -->
   <div class="page" id="page-profit">
     <div class="vip-hero">
       <div class="vip-hero-logo">UMG</div>
@@ -222,12 +217,6 @@
       <div class="vip-table-row"><div class="td">U1</div><div class="td">1,600</div><div class="td">3</div><div class="td">18</div><div class="td">54</div><div class="td">1,620</div><div class="td">19,710</div></div>
       <div class="vip-table-row"><div class="td">U2</div><div class="td">6,500</div><div class="td">8</div><div class="td">28</div><div class="td">224</div><div class="td">6,720</div><div class="td">80,640</div></div>
       <div class="vip-table-row"><div class="td">U3</div><div class="td">20,700</div><div class="td">12</div><div class="td">54</div><div class="td">648</div><div class="td">19,440</div><div class="td">236,520</div></div>
-      <div class="vip-table-row"><div class="td">U4</div><div class="td">73,700</div><div class="td">24</div><div class="td">100</div><div class="td">2,400</div><div class="td">72,000</div><div class="td">876,000</div></div>
-      <div class="vip-table-row"><div class="td">U5</div><div class="td">160,700</div><div class="td">36</div><div class="td">150</div><div class="td">5,400</div><div class="td">162,000</div><div class="td">1,971,000</div></div>
-      <div class="vip-table-row"><div class="td">U6</div><div class="td">333,700</div><div class="td">50</div><div class="td">240</div><div class="td">12,000</div><div class="td">360,000</div><div class="td">4,380,000</div></div>
-      <div class="vip-table-row"><div class="td">U7</div><div class="td">937,700</div><div class="td">60</div><div class="td">600</div><div class="td">36,000</div><div class="td">1,080,000</div><div class="td">13,140,000</div></div>
-      <div class="vip-table-row"><div class="td">U8</div><div class="td">2,273,000</div><div class="td">80</div><div class="td">1,120</div><div class="td">89,600</div><div class="td">2,688,000</div><div class="td">32,704,000</div></div>
-      <div class="vip-table-row"><div class="td">U9</div><div class="td">4,937,000</div><div class="td">100</div><div class="td">1,977</div><div class="td">197,700</div><div class="td">5,931,000</div><div class="td">72,160,500</div></div>
     </div>
     <div class="section-box" style="margin-top:12px">📋 Trainee Level Rules</div>
     <div style="margin:8px 16px 24px;background:#0f1829;border-radius:10px;padding:14px 16px;font-size:13px;color:#ccc;line-height:1.8;border:1px solid #1e2a3a">
@@ -235,7 +224,6 @@
     </div>
   </div>
 
-  <!-- VIP -->
   <div class="page" id="page-vip">
     <div style="padding:14px 18px 8px;background:#0d0d0d;border-bottom:1px solid #1e2a3a">
       <div style="font-size:18px;font-weight:800">💎 VIP Membership</div>
@@ -243,9 +231,9 @@
 
     <div class="vip-card identity">
       <div style="font-size:13px;color:#a0c4ff;margin-bottom:4px">Your Identity</div>
-      <div style="font-size:20px;font-weight:800">Trainee Member</div>
+      <div style="font-size:20px;font-weight:800" id="vip-current-name">Trainee Member</div>
       <div style="margin-top:12px;display:flex;justify-content:space-between;font-size:13px;color:#ccc">
-        <span>Daily Tasks: 0 times</span>
+        <span id="vip-current-tasks">Daily Tasks: 3 times</span>
         <div style="text-align:right"><div style="color:#a0c4ff;font-size:11px">Effective Date</div><div>Permanent Validity</div></div>
       </div>
     </div>
@@ -261,9 +249,9 @@
     <div class="vip-card u1">
       <div class="badge-tr" style="color:#fff">Join Now</div>
       <div class="vip-card-title">U1</div>
-      <div class="vip-card-price">ETB 2,000.00</div>
+      <div class="vip-card-price">ETB 1,600.00</div>
       <div class="vip-card-detail">Daily Tasks: 3 times<br/>Per Order: 18.00 ETB<br/>Daily Earnings: 54.00 ETB</div>
-      <button class="join-btn">Join Now</button>
+      <button class="join-btn" onclick="appDB.buyVIP('U1', 1600)">Join Now</button>
       <div class="badge-icon">🥇</div>
     </div>
 
@@ -272,12 +260,11 @@
       <div class="vip-card-title">U2</div>
       <div class="vip-card-price">ETB 6,500.00</div>
       <div class="vip-card-detail">Daily Tasks: 8 times<br/>Per Order: 28.00 ETB<br/>Daily Earnings: 224.00 ETB</div>
-      <button class="join-btn">Join Now</button>
+      <button class="join-btn" onclick="appDB.buyVIP('U2', 6500)">Join Now</button>
       <div class="badge-icon">🥈</div>
     </div>
   </div>
 
-  <!-- ACCOUNT -->
   <div class="page" id="page-account">
     <div class="account-header-bar">
       <button class="back-btn" onclick="setTab('home')">‹</button>
@@ -286,108 +273,12 @@
     </div>
     <div class="account-user-row">
       <div class="login-account">Login Account: ***979047</div>
-      <button class="daily-signin-btn"><span>📅</span><span>Daily Sign-in</span></button>
+      <button class="daily-signin-btn" onclick="appDB.signIn()"><span>📅</span><span>Daily Sign-in</span></button>
     </div>
     <div class="balance-strip">
-      <div class="balance-cell"><div class="balance-label">Personal Balance(ETB)</div><div class="balance-value">108.00</div></div>
+      <div class="balance-cell"><div class="balance-label">Personal Balance(ETB)</div><div class="balance-value" id="acc-balance">108.00</div></div>
       <div class="balance-cell"><div class="balance-label">Security Deposit(ETB)</div><div class="balance-value">0</div></div>
-      <div class="balance-cell"><div class="balance-label">Your Identity</div><div class="identity-value">💎 Trainee Member</div></div>
+      <div class="balance-cell"><div class="balance-label">Your Identity</div><div class="identity-value" id="acc-identity">💎 Trainee</div></div>
     </div>
     <div class="stats-grid">
-      <div class="stat-cell"><div class="stat-label">Yesterday's Earnings(ETB)</div><div class="stat-value">0.00</div></div>
-      <div class="stat-cell"><div class="stat-label">Today's Earnings(ETB)</div><div class="stat-value">0.00</div></div>
-      <div class="stat-cell"><div class="stat-label">This Week's Earnings(ETB)</div><div class="stat-value">0.00</div></div>
-      <div class="stat-cell"><div class="stat-label">This Month's Earnings(ETB)</div><div class="stat-value">0.00</div></div>
-      <div class="stat-cell"><div class="stat-label">Total Earnings(ETB)</div><div class="stat-value" style="color:var(--green)">118.99</div></div>
-      <div class="stat-cell"><div class="stat-label">Tasks Completed Today (Units)</div><div class="stat-value">0</div></div>
-      <div class="stat-cell"><div class="stat-label">Remaining Tasks Today (Units)</div><div class="stat-value">0</div></div>
-      <div class="stat-cell"><div class="stat-label">Task Rewards(ETB)</div><div class="stat-value">0.00</div></div>
-      <div class="stat-cell"><div class="stat-label">Referral Rewards(ETB)</div><div class="stat-value">0.00</div></div>
-    </div>
-    <button class="menu-btn">Position <span style="color:var(--accent-blue)">›</span></button>
-    <button class="menu-btn">Personal Information <span style="color:var(--accent-blue)">›</span></button>
-    <button class="menu-btn" style="margin-bottom:24px">Settings <span style="color:var(--accent-blue)">›</span></button>
-  </div>
-
-  <!-- BOTTOM NAV -->
-  <nav class="bottom-nav">
-    <button class="nav-item active" id="nav-home" onclick="setTab('home')">
-      <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="0"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9" fill="#0d0d0d"/></svg>
-      Home
-    </button>
-    <button class="nav-item" id="nav-task" onclick="setTab('task')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>
-      Task
-    </button>
-    <button class="nav-item" id="nav-profit" onclick="setTab('profit')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14H11v-2h2v2zm0-4H11V7h2v5z"/></svg>
-      Profit
-    </button>
-    <button class="nav-item" id="nav-vip" onclick="setTab('vip')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-      VIP
-    </button>
-    <button class="nav-item" id="nav-account" onclick="setTab('account')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
-      Account
-    </button>
-  </nav>
-</div>
-
-<script>
-  // ── Tab Navigation ──
-  const tabs = ['home','task','profit','vip','account'];
-  function setTab(id) {
-    tabs.forEach(t => {
-      document.getElementById('page-'+t).classList.toggle('active', t===id);
-      document.getElementById('nav-'+t).classList.toggle('active', t===id);
-    });
-  }
-
-  // ── Task Tabs ──
-  function setTaskTab(btn, idx) {
-    document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
-  }
-
-  // ── Carousel Dots ──
-  const dotsEl = document.getElementById('carousel-dots');
-  let activeDot = 2;
-  for (let i=0;i<13;i++) {
-    const d = document.createElement('div');
-    d.className = 'dot' + (i===activeDot?' active':'');
-    d.onclick = () => { activeDot=i; document.querySelectorAll('.dot').forEach((el,j)=>el.classList.toggle('active',j===i)); };
-    dotsEl.appendChild(d);
-  }
-
-  // ── PWA Install ──
-  let deferredPrompt;
-  const banner = document.getElementById('install-banner');
-  const installBtn = document.getElementById('install-btn');
-  const dismissBtn = document.getElementById('dismiss-btn');
-
-  window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault();
-    deferredPrompt = e;
-    banner.style.display = 'flex';
-  });
-
-  installBtn.addEventListener('click', async () => {
-    banner.style.display = 'none';
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      deferredPrompt = null;
-    }
-  });
-
-  dismissBtn.addEventListener('click', () => { banner.style.display = 'none'; });
-
-  window.addEventListener('appinstalled', () => { banner.style.display = 'none'; });
-
-  // ── Service Worker ──
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  }
-</script>
-</body>
-</html>
+      <div class="stat-cell"><div class="stat-label">Yesterday's Earnings(ETB)</d
